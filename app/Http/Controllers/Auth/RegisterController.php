@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -69,5 +70,27 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    /**
+     * Check if email exists.
+     *
+     * @param  array  $request
+     * @return bool
+     */
+    public function checkEmail(Request $request)
+    {
+        $email = $request->input('email');
+        $isExists = \App\User::where('email', $email)->first();
+
+        if ($isExists) {
+            return response()->json(
+                array("exists" => true)
+            );
+        } else {
+            return response()->json(
+                array("exists" => false)
+            );
+        }
     }
 }

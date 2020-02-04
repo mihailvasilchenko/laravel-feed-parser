@@ -20,6 +20,32 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        function duplicateEmail(element){
+            var email = $(element).val();
+            $.ajax({
+                type: 'POST',
+                url: '{{url('checkemail')}}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    email: email
+                },
+                dataType: 'json',
+                success: function(res) {
+                    if (res.exists) {
+                        alert('true');
+                    } else {
+                        alert('false');
+                    }
+                },
+                error: function (jqXHR, exception) {
+
+                }
+            });
+        }
+    </script>
+
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
