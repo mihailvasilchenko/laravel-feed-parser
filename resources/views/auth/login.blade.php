@@ -64,6 +64,16 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="form-group row mt-3 mb-0">
+                            <div class="col-md-8 offset-md-4">
+                                @if (Route::has('register'))
+                                    <a href="{{ route('register') }}">
+                                        {{ __('New user? Register here.') }}
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
