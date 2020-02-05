@@ -49524,7 +49524,27 @@ Vue.component('example-component', __webpack_require__(/*! ./components/ExampleC
  */
 
 var app = new Vue({
-  el: '#app'
+  el: '#app',
+  data: {
+    email: null,
+    message: null,
+    exists: null
+  },
+  methods: {
+    emailExists: function emailExists() {
+      var _this = this;
+
+      axios.post('/checkemail', {
+        email: this.email
+      }).then(function (res) {
+        _this.exists = res.data.exists;
+        _this.message = res.data.message;
+      })["catch"](function (err) {
+        _this.message = err;
+      });
+      return this.exists;
+    }
+  }
 });
 
 /***/ }),

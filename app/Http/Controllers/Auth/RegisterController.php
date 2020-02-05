@@ -85,11 +85,14 @@ class RegisterController extends Controller
 
         if ($isExists) {
             return response()->json(
-                array("exists" => true)
+                array(
+                    'exists' => true,
+                    'message' => __('validation.unique', ['attribute' => 'email'])
+                )
             );
         } else {
             return response()->json(
-                array("exists" => false)
+                array('exists'  => false)
             );
         }
     }

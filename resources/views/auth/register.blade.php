@@ -29,7 +29,11 @@
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
                             <div class="col-md-6">
-                                <input onblur="duplicateEmail(this)" id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                                <input v-model="email" @blur="emailExists" :class="{ 'is-invalid': emailExists() }" id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+
+                                <span v-if="emailExists()" class="invalid-feedback" role="alert">
+                                    <strong>@{{ message }}</strong>
+                                </span>
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -63,7 +67,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" :disabled="emailExists()">
                                     {{ __('Register') }}
                                 </button>
                             </div>

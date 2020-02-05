@@ -29,4 +29,24 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+    data: {
+        email: null,
+        message: null,
+        exists: null,
+    },
+    methods: {
+        emailExists() {
+            axios.post('/checkemail', {
+                email: this.email
+            })
+            .then(res => {
+                this.exists = res.data.exists;
+                this.message = res.data.message;
+            }).catch(err => {
+                this.message = err;
+            });
+
+            return this.exists;
+        }
+    }
 });
