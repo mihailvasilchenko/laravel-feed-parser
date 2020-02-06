@@ -102,4 +102,13 @@ return [
 
     'curl.timeout' => null,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Feed URL
+    |--------------------------------------------------------------------------
+    |
+    | Default feed url
+    |
+    */
+    'url' => env('FEEDS_URL', 'https://www.theregister.co.uk/software/headlines.atom'),
 ];

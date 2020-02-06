@@ -31,8 +31,9 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function parseFeed() {
-        $feed = \Feeds::make('https://www.theregister.co.uk/software/headlines.atom', true);
+    public function parseFeed()
+    {
+        $feed = \Feeds::make(config('feeds.url'), true);
         $data = array(
             'title'     => $feed->get_title(),
             'permalink' => $feed->get_permalink(),
