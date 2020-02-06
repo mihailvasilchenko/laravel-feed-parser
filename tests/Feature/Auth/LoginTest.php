@@ -61,4 +61,28 @@ class LoginTest extends TestCase
         $response->assertRedirect('/home');
         $this->assertAuthenticatedAs($user);
     }
+
+    /**
+     * Test if email exists.
+     *
+     * @test
+     *
+     * @return void
+     */
+    public function test_if_user_email_exists()
+    {
+        $user = factory(User::class)->create([
+            'password' => bcrypt($password = 'testtest'),
+        ]);
+
+        $response = $this->post('/checkemail', [
+            'email' => $user->email
+        ]);
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'exists' => true,
+        ]);
+    }
 }
