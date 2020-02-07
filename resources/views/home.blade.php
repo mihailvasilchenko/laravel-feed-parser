@@ -9,7 +9,7 @@
     @endif
 
     <div class="row justify-content-center">
-        <div class="col-md-4">
+        <div class="col-md-4 mb-4">
             <div class="card">
                 <div class="card-header">{{ __('Top 10 Words') }}</div>
 

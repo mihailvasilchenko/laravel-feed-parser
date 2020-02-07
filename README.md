@@ -15,21 +15,21 @@ Basic app with auth and feed parsing.
 
 ## Instalation instructures
 1. Get files
-  **git clone https://github.com/mihailvasilchenko/laravel-feed-parser.git**
+  `git clone https://github.com/mihailvasilchenko/laravel-feed-parser.git`
 2. Go to project folder
-  **cd laravel-feed-parser**
+  `cd laravel-feed-parser`
 3. Install composer packages
-  **composer install**
+  `composer install`
 4. Install npm packages
-  **npm install && npm run dev**
+  `npm install && npm run dev`
 5. Copy config file and rename to .env
-  **cp .env.example .env**
+  `cp .env.example .env`
 6. Create mysql db (or db provider of your choice) and update the DB settings in .env file
   (default db name is **feedparser** with user and pass set as **root**)
 7. Run db migrations
-  **php artisan migrate**
+  `php artisan migrate`
 8. Run app
-  **php artisan serve**
+  `php artisan serve`
 9. Run tests
-  **vendor/bin/phpunit**
+  `vendor/bin/phpunit`
   (note that it uses the same db for simplicity's sake, you can edit the config in **phpunit.xml**)
