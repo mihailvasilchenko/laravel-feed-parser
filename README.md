@@ -13,7 +13,7 @@ Basic app with auth and feed parsing.
 - [Composer](https://getcomposer.org/download/)
 - [npm](https://www.npmjs.com/get-npm)
 
-## Instalation instructures
+## Installation instructures
 1. Get files
   `git clone https://github.com/mihailvasilchenko/laravel-feed-parser.git`
 2. Go to project folder
@@ -22,9 +22,9 @@ Basic app with auth and feed parsing.
   `composer install`
 4. Install npm packages
   `npm install && npm run dev`
-5. Copy config file and rename to .env
+5. Copy config file **.env.example** and rename to **.env**
   `cp .env.example .env`
-6. Create mysql db (or db provider of your choice) and update the DB settings in .env file
+6. Create mysql db (or db provider of your choice) and update the DB settings in **.env** file
   (default db name is **feedparser** with user and pass set as **root**)
 7. Run db migrations
   `php artisan migrate`
