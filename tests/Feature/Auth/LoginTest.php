@@ -49,8 +49,10 @@ class LoginTest extends TestCase
      */
     public function test_user_can_login_with_correct_credentials()
     {
+        $password = 'i-love-laravel';
+
         $user = factory(User::class)->create([
-            'password' => bcrypt($password = 'i-love-laravel'),
+            'password' => bcrypt($password),
         ]);
 
         $response = $this->post('/login', [
@@ -79,10 +81,8 @@ class LoginTest extends TestCase
             'email' => $user->email
         ]);
 
-        $response->assertStatus(200);
-
-        $response->assertJson([
-            'exists' => true,
+        $response->assertSessionHasErrors([
+            'email' => 'The email has already been taken.'
         ]);
     }
 }

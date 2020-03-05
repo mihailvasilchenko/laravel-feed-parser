@@ -22,8 +22,7 @@ class FeedTest extends TestCase
 
         $response = $this->actingAs($user)->get('/home');
 
-        $response->assertViewHas('items');
-        $response->assertViewHas('top');
+        $response->assertViewHas('feed');
     }
 
     /**
@@ -39,7 +38,8 @@ class FeedTest extends TestCase
 
         $response = $this->actingAs($user)->get('/home');
 
-        $top = $response->original->getData()['top'];
+        $data = $response->original->getData();
+        $top = $data['feed']['top'];
 
         $this->assertIsArray($top);
         $this->assertCount(10, $top);
