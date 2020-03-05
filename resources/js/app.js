@@ -32,21 +32,20 @@ const app = new Vue({
     data: {
         email: null,
         message: null,
-        exists: null,
+        valid: false,
     },
     methods: {
-        emailExists() {
+        checkEmail() {
             axios.post('/checkemail', {
                 email: this.email
             })
             .then(res => {
-                this.exists = res.data.exists;
-                this.message = res.data.message;
+                this.valid = res.data.email;
+                this.message = null;
             }).catch(err => {
-                this.message = err;
+                this.valid = false;
+                this.message = err.response.data.errors.email[0];
             });
-
-            return this.exists;
         }
     }
 });

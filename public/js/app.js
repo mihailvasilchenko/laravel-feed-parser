@@ -49528,21 +49528,21 @@ var app = new Vue({
   data: {
     email: null,
     message: null,
-    exists: null
+    valid: false
   },
   methods: {
-    emailExists: function emailExists() {
+    checkEmail: function checkEmail() {
       var _this = this;
 
       axios.post('/checkemail', {
         email: this.email
       }).then(function (res) {
-        _this.exists = res.data.exists;
-        _this.message = res.data.message;
+        _this.valid = res.data.email;
+        _this.message = null;
       })["catch"](function (err) {
-        _this.message = err;
+        _this.valid = false;
+        _this.message = err.response.data.errors.email[0];
       });
-      return this.exists;
     }
   }
 });

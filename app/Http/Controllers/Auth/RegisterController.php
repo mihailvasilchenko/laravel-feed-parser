@@ -76,24 +76,14 @@ class RegisterController extends Controller
      * Check if email exists.
      *
      * @param  array  $request
-     * @return bool
+     * @return object
      */
     public function checkEmail(Request $request)
     {
-        $email = $request->input('email');
-        $isExists = \App\User::where('email', $email)->first();
+        $validatedData = $request->validate([
+            'email' => 'email|unique:users',
+        ]);
 
-        if ($isExists) {
-            return response()->json(
-                array(
-                    'exists' => true,
-                    'message' => __('validation.unique', ['attribute' => 'email'])
-                )
-            );
-        } else {
-            return response()->json(
-                array('exists'  => false)
-            );
-        }
+        return $validatedData;
     }
 }

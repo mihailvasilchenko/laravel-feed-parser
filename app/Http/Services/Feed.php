@@ -51,8 +51,7 @@ class Feed
      * Filter array items.
      *
      * @param  string $item
-     * @param  array  $stopwords
-     * @return array
+     * @return bool
      */
     public function filterWords($word)
     {
