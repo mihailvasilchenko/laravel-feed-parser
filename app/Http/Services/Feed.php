@@ -2,8 +2,119 @@
 
 namespace App\Http\Services;
 
+use Goutte\Client;
+
 class Feed
 {
+    protected $stopwords = array();
+
+    /**
+     * Create a new service instance.
+     *
+     * @return void
+     */
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * Normalize string.
+     *
+     * @param  string $string
+     * @return string
+     */
+    public function normalizeString($string)
+    {
+        $normalized = preg_replace('/[\pP]/u', '', trim(preg_replace('/\s\s+/iu', '', mb_strtolower($string))));
+
+        return $normalized;
+    }
+
+    /**
+     * Convert array to string.
+     *
+     * @param  array $array
+     * @return string
+     */
+    public function convertMultiArray($array)
+    {
+        $out = '';
+        foreach ($array as $key => $value) {
+            $out .= strip_tags(strtolower($value->get_title() . ' ' . $value->get_description()));
+        }
+
+        return $this->normalizeString($out);
+    }
+
+    /**
+     * Filter array items.
+     *
+     * @param  string $item
+     * @param  array  $stopwords
+     * @return array
+     */
+    public function filterWords($word)
+    {
+        $matches = ($word == '' || in_array($word, $this->stopwords) || mb_strlen($word) <= 2 || is_numeric($word)) ? false : true;
+
+        return $matches;
+    }
+
+    /**
+     * Match array words.
+     *
+     * @param  string $string
+     * @param  array  $stopwords
+     * @return array
+     */
+    public function matchWords($string, $stopwords)
+    {
+        $matchwords = array_filter(
+            explode(' ', $string),
+            array($this, 'filterWords')
+        );
+
+        return $matchwords;
+    }
+
+    /**
+     * Count duplicate words and limit to top 10
+     *
+     * @param  array $items
+     * @return array
+     */
+    public function countWords($items, $limit = 10)
+    {
+        $string = $this->convertMultiArray($items);
+        $normalized = $this->normalizeString($string);
+        $stopwords = $this->fetchStopWords(config('feeds.stopwords'), 50);
+        $matchwords = $this->matchWords($string, $stopwords);
+        $count = array_count_values($matchwords);
+        arsort($count);
+
+        return array_slice($count, 0, $limit);
+    }
+
+    /**
+     * Fetch stop words from wiki table
+     *
+     * @param  string $url
+     * @param  int    $limit
+     * @return array
+     */
+    public function fetchStopWords($url, $limit = 50)
+    {
+        $crawler = $this->client->request('GET', $url);
+        $crawler = $crawler->filter('table tbody tr td')->reduce(function ($node, $i) {
+            return ($i % 6) == 0;
+        });
+        $crawler = $crawler->each(function ($node) {
+            $this->stopwords[] = $node->text();
+        });
+
+        return array_slice($this->stopwords, 0, $limit, true);
+    }
 
     /**
      * Parse feed.
@@ -18,49 +129,9 @@ class Feed
             'title'     => $feed->get_title(),
             'permalink' => $feed->get_permalink(),
             'items'     => $feed->get_items(),
-            'top'       => $this->countWords($feed->get_items()),
+            'top'       => $this->countWords($feed->get_items(), 10),
         );
 
         return $data;
-    }
-
-    /**
-     * Convert array to string.
-     *
-     * @param  array $array
-     * @return string
-     */
-    public function convert_multi_array($array)
-    {
-        $out = '';
-        foreach ($array as $key => $value) {
-            $out .= strip_tags(strtolower($value->get_title() . ' ' . $value->get_description()));
-        }
-
-        return $out;
-    }
-
-    /**
-     * Count duplicate words and limit to top 10
-     *
-     * @param  array $items
-     * @return array
-     */
-    public function countWords($items)
-    {
-        $string = $this->convert_multi_array($items);
-        mb_internal_encoding('UTF-8');
-        $stopwords = array('the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take', 'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us', 'are', 'has', 'was');
-        $string = preg_replace('/[\pP]/u', '', trim(preg_replace('/\s\s+/iu', '', mb_strtolower($string))));
-        $matchWords = array_filter(
-            explode(' ', $string),
-            function ($item) use ($stopwords) {
-                return !($item == '' || in_array($item, $stopwords) || mb_strlen($item) <= 2 || is_numeric($item));
-            }
-        );
-        $wordCountArr = array_count_values($matchWords);
-        arsort($wordCountArr);
-
-        return array_slice($wordCountArr, 0, 10);
     }
 }

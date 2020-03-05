@@ -111,4 +111,14 @@ return [
     |
     */
     'url' => env('FEEDS_URL', 'https://www.theregister.co.uk/software/headlines.atom'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Stop Words URL
+    |--------------------------------------------------------------------------
+    |
+    | Default stop words url
+    |
+    */
+    'stopwords' => env('FEEDS_STOPWORDS', 'https://en.wikipedia.org/wiki/Most_common_words_in_English'),
 ];
