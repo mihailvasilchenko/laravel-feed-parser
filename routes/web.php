@@ -17,6 +17,6 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@parseFeed')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('/checkemail', 'Auth\RegisterController@checkEmail');
